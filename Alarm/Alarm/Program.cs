@@ -1,6 +1,6 @@
 ﻿using System.IO.Ports;
 
-SerialPort serialPort = new SerialPort("COM3", 9600);
+SerialPort serialPort = new SerialPort("COM5", 9600);
 serialPort.Open();
 await Task.Delay(1000);
 serialPort.DataReceived += (sender, e) =>
