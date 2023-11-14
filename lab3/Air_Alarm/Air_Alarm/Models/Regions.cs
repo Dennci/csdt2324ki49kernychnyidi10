@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Air_Alarm.Models
 {
+    /// <summary>
+    /// The model we use for regions
+    /// </summary>
     public static class Regions
     {
         public static List<string> Region = new List<string>()
