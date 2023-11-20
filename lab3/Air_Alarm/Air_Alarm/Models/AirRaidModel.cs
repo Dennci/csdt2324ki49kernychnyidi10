@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Air_Alarm.Models
 {
+    /// <summary>
+    /// model that we directly transmit to the arduino
+    /// </summary>
     public class AirRaidModel
     {
         public string Region { get; set; }

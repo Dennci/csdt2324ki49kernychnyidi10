@@ -1,5 +1,6 @@
 using Air_Alarm.Models;
 using Air_Alarm.Services;
+using Microsoft.VisualBasic.Logging;
 using System.IO.Ports;
 using System.Net;
 using System.Windows.Forms;
@@ -12,6 +13,9 @@ namespace Air_Alarm
         private AlertModel alertModels = new AlertModel();
         private System.Windows.Forms.Timer timer_to_refresh;
         private int secondsRemaining = 15;
+        /// <summary>
+        /// Constructor Form for first initialize data
+        /// </summary>
         public Form1()
         {
             InitializeComponent();
@@ -31,7 +35,9 @@ namespace Air_Alarm
             pictureBox1.Dock = DockStyle.Fill;
             this.Controls.Add(pictureBox1);
         }
-
+        /// <summary>
+        /// Initialize Component
+        /// </summary>
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
@@ -94,7 +100,9 @@ namespace Air_Alarm
             ResumeLayout(false);
             PerformLayout();
         }
-
+        /// <summary>
+        /// We set the retrieval of data every 15s
+        /// </summary>
         private async void timer1_Tick_1(object sender, EventArgs e)
         {
             GetAlarmMap();
@@ -107,6 +115,9 @@ namespace Air_Alarm
         {
 
         }
+        /// <summary>
+        /// selects whether to activate the speaker
+        /// </summary>
         private void IsAirAlarm(AlertModel alertModel)
         {
             if ( String.IsNullOrEmpty(MyCityModel.Name))
@@ -138,6 +149,9 @@ namespace Air_Alarm
 
             }
         }
+        /// <summary>
+        /// logic to pull up-to-date data on the air alert map
+        /// </summary>
         private void GetAlarmMap()
         {
             string imageUrl = "https://ubilling.net.ua/aerialalerts/?map=true";
@@ -158,12 +172,19 @@ namespace Air_Alarm
         private ComboBox comboBox1;
         private Label label1;
         private System.ComponentModel.IContainer components;
+
+        /// <summary>
+        /// logic for selecting an area in the dropdown list
+        /// </summary>
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedRegion = comboBox1.SelectedItem as string;
             MyCityModel.Name = selectedRegion;
+            MyCityModel.AlertNow = false;
         }
-
+        /// <summary>
+        /// function that calculates the timer for the label
+        /// </summary>
         private void timer_to_refresh_Tick(object sender, EventArgs e)
         {
             secondsRemaining--;

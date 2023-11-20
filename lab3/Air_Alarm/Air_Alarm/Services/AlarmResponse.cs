@@ -10,10 +10,12 @@ using static System.Net.WebRequestMethods;
 
 namespace Air_Alarm.Services
 {
+    /// <summary>
+    /// We declare a static class for pulling data from the API
+    /// </summary>
     public static class AlarmResponse
     {
         public static AlertModel States { get; set; }
-
         public static async Task<AlertModel> GetAlarmResponse()
         {
             string url = "https://ubilling.net.ua/aerialalerts/?source=[default]";

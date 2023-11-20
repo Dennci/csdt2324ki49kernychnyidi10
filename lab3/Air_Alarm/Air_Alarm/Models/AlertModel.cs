@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Air_Alarm.Models
 {
+    /// <summary>
+    /// A model for retrieving data from ARI
+    /// </summary>
     public class AlertModel
     {
         public string Source { get; set; }
