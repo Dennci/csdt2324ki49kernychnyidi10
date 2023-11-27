@@ -106,7 +106,7 @@ namespace Air_Alarm
         private async void timer1_Tick_1(object sender, EventArgs e)
         {
             GetAlarmMap();
-            alertModels= await AlarmResponse.GetAlarmResponse();
+            alertModels = await AlarmResponse.GetAlarmResponse();
             IsAirAlarm(alertModels);
             secondsRemaining = 15;
         }
@@ -118,36 +118,46 @@ namespace Air_Alarm
         /// <summary>
         /// selects whether to activate the speaker
         /// </summary>
-        private void IsAirAlarm(AlertModel alertModel)
+        public void IsAirAlarm(AlertModel alertModel)
         {
-            if ( String.IsNullOrEmpty(MyCityModel.Name))
+            if (IsCityEmpty(MyCityModel.Name))
             {
                 return;
             }
             var newAlert = alertModel.States[MyCityModel.Name];
-            if (newAlert.AlertNow != MyCityModel.AlertNow)
+            if (IsStatusChanged(newAlert.AlertNow))
             {
-                MyCityModel.AlertNow=newAlert.AlertNow;
-                
+                MyCityModel.AlertNow = newAlert.AlertNow;
+
                 var arduinoModel = new AirRaidModel()
                 {
                     AlertNow = newAlert.AlertNow,
                     Region = MyCityModel.Name
                 };
-                XmlSerializer serializer = new XmlSerializer(typeof(AirRaidModel));
-                using (StreamWriter writer = new StreamWriter("data.xml"))
-                {
-                    serializer.Serialize(writer, arduinoModel);
-                }
-
-                using (SerialPort port = new SerialPort("COM3", 9600))
-                {
-                    port.Open();
-                    string xmlData = File.ReadAllText("data.xml");
-                    port.Write(xmlData);
-                }
-
+                PutDataIntoXML(arduinoModel,"data.xml");
             }
+        }
+        /// <summary>
+        /// Check is city Empty
+        /// </summary>
+        public bool IsCityEmpty(string cityName)
+        {
+            if (String.IsNullOrEmpty(cityName))
+            {
+                return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// Check is Status changed
+        /// </summary>
+        public bool IsStatusChanged(bool alertModel)
+        {
+            if(alertModel != MyCityModel.AlertNow)
+            {
+                return true;
+            }
+            return false;
         }
         /// <summary>
         /// logic to pull up-to-date data on the air alert map
@@ -166,6 +176,28 @@ namespace Air_Alarm
                 // Load the image into the PictureBox
                 pictureBox1.Image = Image.FromStream(stream);
             }
+        }
+        /// <summary>
+        /// Write data into XML
+        /// </summary>
+        public void PutDataIntoXML(AirRaidModel airRaid,string fileName)
+        {
+            if(airRaid == null) 
+            {
+                return;
+            }
+            XmlSerializer serializer = new XmlSerializer(typeof(AirRaidModel));
+            using (StreamWriter writer = new StreamWriter(fileName))
+            {
+                serializer.Serialize(writer, airRaid);
+            }
+
+            //using (SerialPort port = new SerialPort("COM3", 9600))
+            //{
+                //port.Open();
+                string xmlData = File.ReadAllText(fileName);
+                //port.Write(xmlData);
+            //}
         }
         private PictureBox pictureBox1;
         private System.Windows.Forms.Timer timer1;
